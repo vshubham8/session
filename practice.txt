@@ -1,0 +1,91 @@
+/*
+#---------------
+//dijkstra - shortest dist from source ---- #define iPair pair<int,int>
+void shortestPath(int src) { priority_queue< iPair, vector <iPair> , greater<iPair> > pq; 
+vector<int> dist(V, INF); pq.push(make_pair(0, src)); 	dist[src] = 0; 
+while (!pq.empty()) 	{ int u = pq.top().second; pq.pop(); list< pair<int, int> >::iterator i; 
+for (i = adj[u].begin(); i != adj[u].end(); ++i) {int v = (*i).first; int weight = (*i).second; 
+if (dist[v] > dist[u] + weight) {dist[v] = dist[u] + weight; pq.push(make_pair(dist[v], v)); }}} 
+printf("Vertex Distance from Source\n"); for (int i = 0; i < V; ++i) printf("%d \t\t %d\n", i, dist[i]); } 
+int main()                      'u' 'v' 'w'
+{  V = 9; Graph g(V); 	g.addEdge(7, 8, 7);... 	g.shortestPath(0); 	return 0; } 
+#---------------
+
+#---------------
+//travelling is fun
+#define int long long
+struct dsu {vector<int> par, sz;dsu(int n): par(n), sz(n, 1) {for (int i = 0; i < n; i++) {
+par[i] = i;}}int root(int a) {if (a == par[a]) return a;return par[a] = root(par[a]);}void merge(int a, int b) 
+{a = root(a);b = root(b);if (a == b) return;if (sz[a] < sz[b]) swap(a, b);sz[a] += sz[b];par[b] = a;}};
+vector<int> findReachable(int n, int g, vector<int> from, vector<int> to) {dsu d(n);for (int k = g + 1; k <= n; k++) {
+for (int x = 2 * k; x <= n; x += k) {d.merge(x - 1, x - k - 1);}}int m = from.size();vector<int> ans;
+for (int i = 0; i < m; i++) {ans.push_back(d.root(from[i] - 1) == d.root(to[i] - 1));}return ans;}
+main() {vector<int> from {10, 4, 3, 6};vector<int> to {3, 6, 2, 9};vector<int> reachable = findReachable(10, 1, from, to);
+for (int i = 0; i < 4; i++) {cout << "From " << from[i] << " to " << to[i] << ": ";
+cout << (reachable[i] ? "Possible" : "Not possible") << '\n';}return 0;}
+#---------------
+
+#---------------
+//turnstile
+vector<int> getTimeStamps(vector<int> time, vector<int> dir) {int n = time.size();time.push_back(1E9 + 1E6);
+vector<int> out(n);queue<int> q[2];for (int i = 0, t = time[0], fl = -1; i < n; i++) {
+q[dir[i]].push(i);while (t < time[i + 1]) {if (not q[0].empty() and not fl) {out[q[0].front()] = t++;
+q[0].pop();fl = 0;}else if (not q[1].empty()) {out[q[1].front()] = t++;q[1].pop();fl = 1;}
+else if (not q[0].empty()) {out[q[0].front()] = t++;q[0].pop();fl = 0;}else {t = time[i + 1];fl = -1;}}}return out;}
+#---------------
+
+#---------------
+//palin sub
+int palSubstring(string &a, string &b) {int n = a.size(), m = b.size();int ans = n + 1;for (int i = 0; i <= n - m; i++) {
+int cost = 0, error = 0;string s = a;for (int j = 0; j < m; j++) {if (s[i + j] != b[j]) {s[i + j] = b[j];cost++;}}
+for (int j = 0; j < n / 2; j++) {if (s[j] != s[n - 1 - j]) {if (j < max(i, n - m - i)) cost++;else error++;}}
+if (ans > cost and not error) {ans = cost;}}return (ans > n ? -1 : ans);}
+int main() {int t; cin >> t;while (t--) {string a, b; cin >> a >> b;cout << palSubstring(a, b) << '\n';}return 0;}
+#---------------
+
+#---------------
+//swings
+int dp[9000][9000][2];int n;int m;int k;int *shop;int getswings(int k, int i, int mood) {
+if(i == m) return 0;if(dp[k][i][mood] != -1) return dp[k][i][mood];int temp, a, b;
+if(mood == 1) {temp = k - shop[i] >= 0 ? k - shop[i] : 0;if(temp >= n) a = getswings( temp, i+1, 1);
+else a = 1 + getswings(temp, i+1, 0);b = getswings(k + shop[i], i+1, 1);}
+else {temp = k - shop[i] >= 0 ? k - shop[i] : 0;a = getswings(temp, i+1, 0);temp = k + shop[i];	
+if(temp >= n) b = 1 + getswings(temp, i+1, 1);else b = getswings(temp, i+1, 0);}return dp[k][i][mood] = max(a, b);}
+int solve() {cin >> n >> k >> m;shop = new int[m];for(int i = 0; i < m; i++) cin >> shop[i];memset(dp, -1, sizeof dp);
+if(k >= n) cout << getswings(k, 0, 1);else cout << getswings(k, 0, 0);}int main() {	solve();	return 0;}
+#---------------
+
+#---------------
+//queries for counts
+
+////////////
+vector<int> gfg = {5,6,7,7,6,5,5,6}; 
+sort (v.begin(), v.end());  // 5 5 5 6 6 6 7 7 
+vector<int>::iterator lower,upper; lower = lower_bound (v.begin(), v.end(), 6);  upper = upper_bound (v.begin(), v.end(), 6);  
+cout << "lower_bound for 6 at position " << (lower- v.begin()) << '\n'; // ans=3
+cout << "upper_bound for 6 at position " << (upper - v.begin()) << '\n';   // ans=6
+////////////
+int countInRange(int arr[], int n, int x, int y) { int count = 0; count = upperIndex(arr, n, y) - lowerIndex(arr, n, x) + 1; 
+return count; }int main() { int arr[] = { 1, 4, 4, 9, 10, 3 }; int n = sizeof(arr) / sizeof(arr[0]); sort(arr, arr + n); 
+int i = 1, j = 4; cout << countInRange(arr, n, i, j) << endl; i = 9, j = 12; cout << countInRange(arr, n, i, j) << endl; 
+return 0; }
+#---------------
+
+#---------------
+//min. sum of abs diff
+long long int findMinSum(int a[], int b[], int n) { sort(a, a+n); sort(b, b+n); long long int sum= 0 ; 
+for (int i=0; i<n; i++) sum = sum + abs(a[i]-b[i]); return sum; }
+#---------------
+
+#---------------
+//cherry pickup
+int maxy(int a,int b,int c,int d){return max(a,max(b,max(c,d)));}
+int dp[100][100][100];int n;int pick(int r1,int c1,int c2,vector<vector<int>>& grid){int r2=r1+c1-c2;
+if(r1==n||r2==n||c1==n||c2==n||grid[r1][c1]==-1||grid[r2][c2]==-1)return INT_MIN;if(r1==n-1&&c1==n-1)
+return grid[r1][c1];if(dp[r1][c1][c2]!=-1)return dp[r1][c1][c2];int ans=grid[r1][c1];if(c1!=c2)ans+=grid[r2][c2];
+int m1=pick(r1+1,c1,c2,grid);int m2=pick(r1+1,c1,c2+1,grid);int m3=pick(r1,c1+1,c2,grid);int m4=pick(r1,c1+1,c2+1,grid);
+ans+=max(max(max(m1,m2),m3),m4);dp[r1][c1][c2]=ans;return dp[r1][c1][c2];}
+int cherryPickup(vector<vector<int>>& grid) {if(grid.size()==0)return 0;memset(dp,-1,sizeof(dp));n=grid.size();
+return max(0,pick(0,0,0,grid));}
+#---------------
+*/
